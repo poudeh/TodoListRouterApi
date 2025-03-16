@@ -40,8 +40,8 @@ export default function TodoContextProvider({ children }) {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
-  const ToggleSuggestedTasks = (id)=> {
-    const index = suggestedTasks.findIndex(t=> t.id == id);
+  const ToggleSuggestedTasks = (id) => {
+    const index = suggestedTasks.findIndex(t => t.id == id);
     let newTaskITems = [...suggestedTasks]
     newTaskITems[index].completed = !newTaskITems[index].completed;
     setSuggestedTasks(newTaskITems);
@@ -106,23 +106,23 @@ export default function TodoContextProvider({ children }) {
     }
   };
 
-    return (
-      <TodoContext.Provider value={{
-        todos,
-        setTodos,
-        addTodo,
-        addWholeTodo,
-        toggleTodo,
-        removeTodo,
-        suggestedTasks,
-        addTask,
-        checkedTasks,
-        handleCheckboxChange,
-        handleAddCheckedTasks,
-        makeTodoCompleted,
-        makeTodoIncomplete
-      }}>
-        {children}
-      </TodoContext.Provider>
-    );
-  }
+  return (
+    <TodoContext.Provider value={{
+      todos,
+      setTodos,
+      addTodo,
+      addWholeTodo,
+      toggleTodo,
+      removeTodo,
+      suggestedTasks,
+      addTask,
+      checkedTasks,
+      handleCheckboxChange,
+      handleAddCheckedTasks,
+      makeTodoCompleted,
+      makeTodoIncomplete
+    }}>
+      {children}
+    </TodoContext.Provider>
+  );
+}

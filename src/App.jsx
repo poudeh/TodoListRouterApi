@@ -1,100 +1,35 @@
-import React, { useContext, useState } from 'react';
 import './App.css';
-import TodoListItem from './Components/TodoListItem';
-import { TodoContext } from './Context/TodoContextProvider';
-import SuggestTask from './Components/SuggestTask';
+import Todo from './Pages/Todo';
+import SuggestTaskPage from './Pages/SuggestTaskPage';
+import User from './Pages/User';
+import { useState } from 'react';
+import Profile from './Pages/Profile';
+import NoPageFound from './Pages/NoPageFound';
+import AddOrEditUser from './Pages/AddOrEditUser';
+import EditUserAlert from './Components/EditUserAlert';
+import { BrowserRouter , Routes , Route , Navigate } from 'react-router-dom';
+import UploadUsers from './Pages/UploadUsers';
 
 function App() {
-  const {
-    todos,
-    addTodo,
-    suggestedTasks,
-    addTask,
-    handleAddCheckedTasks,
-    handleCheckboxChange,
-    checkedTasks,
-    makeTodoCompleted,
-    makeTodoIncomplete
-  } = useContext(TodoContext);
-
-  const [text, setText] = useState("");
-  const [suggestTaskText, setSuggestTaskText] = useState("");
-
+  const [admin, isAdmin] = useState(true);
   return (
     <>
-      <div className="max-w-md mx-auto mt-10 p-5 bg-white shadow-lg rounded-lg">
-        <h1 className="text-2xl font-bold mb-4 text-center">To-Do List</h1>
-        <div className="flex gap-2">
-          <input
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            type="text"
-            className="flex-1 p-2 border rounded-md"
-            placeholder="Add a new task..."
-          />
-          <button
-            onClick={() => {
-              addTodo(text);
-              setText("");
-            }}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md"
-          >
-            Add
-          </button>
-        </div>
-        <ul className="mt-4 space-y-2">
-          {todos.length > 0 ? (
-            todos.map(todo => (
-              <TodoListItem
-                key={todo.id}
-                todo={todo}
-                makeTodoComplete={makeTodoCompleted}
-                makeTodoIncomplete={makeTodoIncomplete}
-              />
-            ))
-          ) : (
-            <li className="text-center text-gray-500">Nothing to do</li>
-          )}
-        </ul>
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Todo />} />
+          <Route path='/SuggestedTasks/*' replace element={<SuggestTaskPage />} />
+          <Route path='/Profile' element={admin ? <Profile /> : <Navigate to="/" />} />
+          <Route path='/User' element={<User />} />
+          <Route path='/User/add' element={<AddOrEditUser />}>
+            <Route path=':userId' element={<EditUserAlert />} />
+          </Route>
+          <Route path='/UploadUsers' element={<UploadUsers/>}>
 
-      <div className="max-w-md mx-auto mt-10 p-5 bg-white shadow-lg rounded-lg">
-        <h1 className="text-2xl font-bold mb-4 text-center">Suggest Tasks</h1>
-        <div className="flex gap-2">
-          <input
-            value={suggestTaskText}
-            onChange={(e) => setSuggestTaskText(e.target.value)}
-            type="text"
-            className="flex-1 p-2 border rounded-md"
-            placeholder="Add a new task..."
-          />
-          <button
-            onClick={() => {
-              addTask(suggestTaskText);
-              setSuggestTaskText("");
-            }}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md"
-          >
-            Add
-          </button>
-          <button
-            onClick={handleAddCheckedTasks}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md"
-          >
-            Add checked tasks to todo
-          </button>
-        </div>
-        <ul className="mt-4 space-y-2">
-          {suggestedTasks.map(task => (
-            <SuggestTask
-              key={task.id}
-              task={task}
-              onCheckboxChange={handleCheckboxChange}
-              isChecked={checkedTasks.includes(task.id)}
-            />
-          ))}
-        </ul>
-      </div>
+          </Route>
+          
+          <Route path='*' element={<NoPageFound />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
